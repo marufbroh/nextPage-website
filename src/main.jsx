@@ -9,12 +9,15 @@ import {
     createBrowserRouter,
     RouterProvider,
 } from "react-router-dom";
+import BookDetails from './components/BookDetails';
+import ErrorPage from './components/ErrorPage';
 
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: '/',
@@ -22,18 +25,24 @@ const router = createBrowserRouter([
             },
             {
                 path: 'books',
-                element: <Books />
+                element: <Books />,
+                loader: () => fetch('https://api.itbook.store/1.0/new')
+            },
+            {
+                path: 'books/:bookId',
+                element: <BookDetails />,
+                loader: ({ params }) => fetch(`https://api.itbook.store/1.0/books/${params.bookId}`)
             },
             {
                 path: 'about',
                 element: <About />
-            },
+            }
         ]
     },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+    <RouterProvider router={router} />
     </React.StrictMode>
 );
